@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Pins View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="PinsViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="60h-g7-sdr">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="60h-g7-sdr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="9PN-HD-aGJ"/>
+                            <constraint firstItem="60h-g7-sdr" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="aQE-8O-VtZ"/>
+                            <constraint firstAttribute="trailing" secondItem="60h-g7-sdr" secondAttribute="trailing" id="lsl-HH-KA3"/>
+                            <constraint firstItem="60h-g7-sdr" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="nSf-9U-Sir"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="longPressGesture" destination="3OV-1x-IUV" id="MZ8-y7-h4a"/>
+                        <outlet property="mapView" destination="60h-g7-sdr" id="oec-qK-nbc"/>
+                        <segue destination="QRZ-j8-EMf" kind="show" identifier="PinSelected" id="C0e-EZ-WlO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="3OV-1x-IUV">
+                    <connections>
+                        <action selector="mapViewLongPressed:" destination="BYZ-38-t0r" id="XN1-Bb-3IH"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="32.799999999999997" y="33.733133433283363"/>
+        </scene>
+        <!--Photos View Controller-->
+        <scene sceneID="6uQ-Qf-LRM">
+            <objects>
+                <viewController id="QRZ-j8-EMf" customClass="PhotosViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="QoV-CY-YMO">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tUx-s8-xmm">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <items>
+                                    <navigationItem id="8L5-Ge-EbP">
+                                        <barButtonItem key="leftBarButtonItem" title="Done" id="TTB-nC-xDf">
+                                            <connections>
+                                                <action selector="doneButtonPressed:" destination="QRZ-j8-EMf" id="zsn-3p-M47"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="tUx-s8-xmm" firstAttribute="leading" secondItem="QoV-CY-YMO" secondAttribute="leading" id="7tk-hP-PdH"/>
+                            <constraint firstItem="tUx-s8-xmm" firstAttribute="top" secondItem="moD-cO-PDd" secondAttribute="top" id="c9w-9d-3g6"/>
+                            <constraint firstAttribute="trailing" secondItem="tUx-s8-xmm" secondAttribute="trailing" id="fCo-Xr-yrD"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="moD-cO-PDd"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="WyT-eN-2Jj">
+                        <barButtonItem key="leftBarButtonItem" title="Done" id="fVn-bf-ZLQ">
+                            <connections>
+                                <action selector="doneButtonPressed:" destination="QRZ-j8-EMf" id="mzs-z6-of3"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UfF-QI-ztf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="866" y="34"/>
+        </scene>
+    </scenes>
+</document>
