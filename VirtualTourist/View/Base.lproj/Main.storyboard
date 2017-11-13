@@ -66,12 +66,54 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="AKo-LX-3Cw">
+                                <rect key="frame" x="0.0" y="64" width="375" height="157"/>
+                            </mapView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Buz-RC-yON">
+                                <rect key="frame" x="0.0" y="219" width="375" height="448"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="448" id="Q60-cC-CEV"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="tNd-QP-P3k">
+                                    <size key="itemSize" width="102" height="111"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="PhotoCollectionViewCell" id="xeA-2i-war" customClass="PhotoCollectionViewCell" customModule="VirtualTourist" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="102" height="111"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="102" height="111"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8z2-FG-wzt">
+                                                    <rect key="frame" x="0.0" y="0.0" width="102" height="111"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                        <connections>
+                                            <outlet property="imageView" destination="8z2-FG-wzt" id="M56-zG-ueo"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="tUx-s8-xmm" firstAttribute="leading" secondItem="QoV-CY-YMO" secondAttribute="leading" id="7tk-hP-PdH"/>
-                            <constraint firstItem="tUx-s8-xmm" firstAttribute="top" secondItem="moD-cO-PDd" secondAttribute="top" id="c9w-9d-3g6"/>
-                            <constraint firstAttribute="trailing" secondItem="tUx-s8-xmm" secondAttribute="trailing" id="fCo-Xr-yrD"/>
+                            <constraint firstItem="AKo-LX-3Cw" firstAttribute="trailing" secondItem="Buz-RC-yON" secondAttribute="trailing" id="5l1-uR-rgn"/>
+                            <constraint firstAttribute="trailing" secondItem="tUx-s8-xmm" secondAttribute="trailing" id="9li-vb-D5O"/>
+                            <constraint firstItem="AKo-LX-3Cw" firstAttribute="leading" secondItem="Buz-RC-yON" secondAttribute="leading" id="JIY-fX-8zk"/>
+                            <constraint firstItem="tUx-s8-xmm" firstAttribute="leading" secondItem="QoV-CY-YMO" secondAttribute="leading" id="PRg-Y6-zRx"/>
+                            <constraint firstItem="tUx-s8-xmm" firstAttribute="top" secondItem="moD-cO-PDd" secondAttribute="top" id="QXm-Fa-qHD"/>
+                            <constraint firstItem="moD-cO-PDd" firstAttribute="bottom" secondItem="AKo-LX-3Cw" secondAttribute="bottom" constant="446" id="aJ7-Bm-Mub"/>
+                            <constraint firstItem="tUx-s8-xmm" firstAttribute="leading" secondItem="AKo-LX-3Cw" secondAttribute="leading" id="b15-q1-jOZ"/>
+                            <constraint firstItem="AKo-LX-3Cw" firstAttribute="top" secondItem="tUx-s8-xmm" secondAttribute="bottom" id="dnv-E4-JHW"/>
+                            <constraint firstItem="tUx-s8-xmm" firstAttribute="trailing" secondItem="AKo-LX-3Cw" secondAttribute="trailing" id="yS4-PA-EtP"/>
+                            <constraint firstItem="Buz-RC-yON" firstAttribute="bottom" secondItem="moD-cO-PDd" secondAttribute="bottom" id="yys-nN-ftJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="moD-cO-PDd"/>
                     </view>
@@ -82,10 +124,15 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="collectionView" destination="Buz-RC-yON" id="8RE-3g-ggH"/>
+                        <outlet property="flowLayout" destination="tNd-QP-P3k" id="aKu-52-tVh"/>
+                        <outlet property="mapView" destination="AKo-LX-3Cw" id="Ia3-Js-HbV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UfF-QI-ztf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="866" y="34"/>
+            <point key="canvasLocation" x="864.79999999999995" y="33.733133433283363"/>
         </scene>
     </scenes>
 </document>

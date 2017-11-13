@@ -100,6 +100,8 @@ class PinsViewController: UIViewController, UIGestureRecognizerDelegate {
         if segue.identifier == "PinSelected" {
             let viewController = segue.destination as! PhotosViewController
             viewController.selectedPin = selectedPin
+            viewController.container = container
+            
         }
     }
     
@@ -110,10 +112,10 @@ extension PinsViewController {
     /*
      * Use lat and lng to fetch an existing pin from the database
      */
-    func getPin(lat: CLLocationDegrees, lng: CLLocationDegrees) -> [Pin]? {
+    func getPin(lat: CLLocationDegrees, lng: CLLocationDegrees) -> Pin? {
         let fetchRequest = createPinFilterFetchRequest(format: "lat = %@ and lng = %@", arguments: [lat, lng])
         let pins: [Pin]? = fetchPins(fetchRequest: fetchRequest)
-        return pins
+        return pins?.last
     }
     
     /*
@@ -169,7 +171,8 @@ extension PinsViewController: MKMapViewDelegate {
         let annotationCoordinates: CLLocationCoordinate2D = (view.annotation?.coordinate)!
         
         let pin = self.getPin(lat: annotationCoordinates.latitude, lng: annotationCoordinates.longitude)
-        if pin != nil, pin!.count > 0 {
+        if pin != nil {
+            selectedPin = pin
             performSegue(withIdentifier: "PinSelected", sender: self)
         } else {
             print("error getting pin")

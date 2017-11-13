@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1DF7DCA1FB9BF4A0027982B /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DF7DC91FB9BF4A0027982B /* PhotosCollectionViewController.swift */; };
+		A1DF7DCC1FB9CC440027982B /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DF7DCB1FB9CC440027982B /* Request.swift */; };
+		A1DF7DCE1FB9CC6A0027982B /* FlickrPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DF7DCD1FB9CC6A0027982B /* FlickrPhoto.swift */; };
 		A1F103241FB8A73D004248BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F103231FB8A73D004248BC /* AppDelegate.swift */; };
 		A1F103291FB8A73D004248BC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1F103271FB8A73D004248BC /* Main.storyboard */; };
 		A1F1032C1FB8A73D004248BC /* VirtualTourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A1F1032A1FB8A73D004248BC /* VirtualTourist.xcdatamodeld */; };
@@ -26,6 +29,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A1DF7DC91FB9BF4A0027982B /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
+		A1DF7DCB1FB9CC440027982B /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		A1DF7DCD1FB9CC6A0027982B /* FlickrPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrPhoto.swift; sourceTree = "<group>"; };
 		A1F103201FB8A73D004248BC /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1F103231FB8A73D004248BC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A1F103281FB8A73D004248BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -103,6 +109,7 @@
 				A1F1033C1FB8AA32004248BC /* Pin.swift */,
 				A1F1033E1FB8AA52004248BC /* Photo.swift */,
 				A1F103511FB8C1A3004248BC /* FetchedResultsViewController.swift */,
+				A1DF7DC91FB9BF4A0027982B /* PhotosCollectionViewController.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -133,6 +140,8 @@
 				A1F103491FB8ABDF004248BC /* Constants.swift */,
 				A1F1034B1FB8ABFD004248BC /* ConvenienceMethods.swift */,
 				A1F1034D1FB8AC1A004248BC /* Client.swift */,
+				A1DF7DCB1FB9CC440027982B /* Request.swift */,
+				A1DF7DCD1FB9CC6A0027982B /* FlickrPhoto.swift */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -210,11 +219,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1F1034C1FB8ABFD004248BC /* ConvenienceMethods.swift in Sources */,
+				A1DF7DCE1FB9CC6A0027982B /* FlickrPhoto.swift in Sources */,
 				A1F1033F1FB8AA52004248BC /* Photo.swift in Sources */,
 				A1F103471FB8AB64004248BC /* PhotoCollectionViewCell.swift in Sources */,
+				A1DF7DCA1FB9BF4A0027982B /* PhotosCollectionViewController.swift in Sources */,
 				A1F103411FB8AABA004248BC /* PinsViewController.swift in Sources */,
 				A1F103501FB8B720004248BC /* ErrorNotificationViewController.swift in Sources */,
 				A1F1034E1FB8AC1A004248BC /* Client.swift in Sources */,
+				A1DF7DCC1FB9CC440027982B /* Request.swift in Sources */,
 				A1F1033D1FB8AA32004248BC /* Pin.swift in Sources */,
 				A1F103451FB8AAF8004248BC /* PhotoDetailViewController.swift in Sources */,
 				A1F103521FB8C1A3004248BC /* FetchedResultsViewController.swift in Sources */,
