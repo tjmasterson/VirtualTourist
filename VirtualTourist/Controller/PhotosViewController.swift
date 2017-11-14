@@ -44,6 +44,7 @@ class PhotosViewController: UIViewController {
         collectionView.dataSource = self
         mapView.delegate = self
         setupMapView()
+        searchForFlickrPhotos()
     }
     
     func updateUI() {
@@ -67,10 +68,33 @@ class PhotosViewController: UIViewController {
         }
     }
     
-    func searchForFlickrPhotos() {
-    
+    func flickrRequest() -> Request? {
+        if let bBox = selectedPin?.getBBoxString() {
+            let parameters = [FlickrParamKeys.BoundingBox: bBox]
+            return Request(parameters)
+        }
+        return nil
     }
     
+    func searchForFlickrPhotos() {
+        if let request = flickrRequest() {
+            request.fetchFlickrPhotos { [weak self] photos in
+                DispatchQueue.main.async {                      // so we must dispatch back to main queue
+                    self?.insertPhotos(photos)
+                }
+            }
+        }
+    }
+    
+    func insertPhotos(_ photos: [FlickrPhoto]) {
+        container?.performBackgroundTask { [weak self] context in
+            for photoData in photos {
+                let photo = try? Photo(title: photoData.title, imageURL: photoData.imageURL, context: context)
+            }
+            try? context.save()
+        }
+    }
+
     func setupFlowLayout() {
         
         let space: CGFloat = 3

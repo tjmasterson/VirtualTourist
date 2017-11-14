@@ -27,6 +27,8 @@ public struct FlickrParamKeys {
     static let Format = "format"
     static let SafeSearch = "safe_search"
     static let Page = "page"
+    static let BoundingBox = "bbox"
+    static let Extras = "extras"
 }
 
 public struct FlickrParamValues {
@@ -40,8 +42,8 @@ public struct FlickrParamValues {
 
 public struct FlickrResponseKeys {
     static let Status = "stat" // ???
-    static let Photos = "photos"
-    static let Photo = "photo"
+    static let PhotosCollectionData = "photos"
+    static let PhotosCollection = "photo"
     static let Title = "title"
     static let MediumURL = "url_m"
     static let Pages = "pages"

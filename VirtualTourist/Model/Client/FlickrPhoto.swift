@@ -16,7 +16,7 @@ public struct FlickrPhoto {
     init?(data: NSDictionary?) {
         guard
             let title = data?.value(forKeyPath: FlickrKey.title) as! String?,
-            let imageURL = data?.value(forKeyPath: FlickrKey.imageURL) as! URL?
+            let imageURL = URL(string: data?.value(forKeyPath: FlickrKey.imageURL) as! String)
             else {
                 return nil
         }

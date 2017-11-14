@@ -12,8 +12,7 @@ import Foundation
 
 class Pin: NSManagedObject {
     
-    class func findOrCreatePin(lat: Double, lng: Double, in context: NSManagedObjectContext) throws -> Pin
-    {
+    class func findOrCreatePin(lat: Double, lng: Double, in context: NSManagedObjectContext) throws -> Pin {
         let request: NSFetchRequest<Pin> = Pin.fetchRequest()
         request.predicate = NSPredicate(format: "lat = %@ and lng = %@", lat, lng)
         
@@ -33,5 +32,14 @@ class Pin: NSManagedObject {
         pin.creationDate = NSDate() as Date
         pin.hasPhotos = false
         return pin
+    }
+    
+    func getBBoxString() -> String {
+        let bottomLeftLat = max(self.lat - Flickr.SearchBBoxHalfHeight, Flickr.SearchLatRange.0)
+        let bottomLeftLng = max(self.lng - Flickr.SearchBBoxHalfWidth, Flickr.SearchLngRange.0)
+        let topRightLat = min(self.lat + Flickr.SearchBBoxHalfHeight, Flickr.SearchLatRange.1)
+        let topRightLng = min(self.lng + Flickr.SearchBBoxHalfWidth, Flickr.SearchLngRange.1)
+        
+        return "\(bottomLeftLng),\(bottomLeftLat),\(topRightLng),\(topRightLat)"
     }
 }
