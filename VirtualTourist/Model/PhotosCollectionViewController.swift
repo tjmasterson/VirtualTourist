@@ -25,58 +25,46 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionViewCell", for: indexPath) as! PhotoCollectionViewCell
         
-        //        cell.imageView.image = UIImage(named: "defaultImage")
-        //        cell.activityIndicator.startAnimating()
-        //        cell.imageView.contentMode = .scaleAspectFit
-        //        cell.colorPanel.isHidden = true
+        cell.imageView.image = UIImage(named: "defaultImage")
+        cell.activityIndicator.startAnimating()
+        cell.imageView.contentMode = .scaleAspectFit
         
         let photo = self.fetchedResultsController?.object(at: indexPath) as? Photo
-        
-        //        if photo?.image == nil {
-        //
-        //            let url = photo?.url
-        //            _ = Client.sharedInstance().getImageData(url!) { data, error in
-        //                if let image = UIImage(data: data!) {
-        //
-        //                    performUIUpdatesOnMain {
-        //                        cell.imageView.image = image
-        //                        cell.activityIndicator.stopAnimating()
-        //                    }
-        //
-        //                } else {
-        //                    print(error)
-        //                    cell.activityIndicator.stopAnimating()
-        //                }
-        //            }
-        //        } else {
-        //            cell.activityIndicator.stopAnimating()
-        //            cell.imageView.image = UIImage(data: (photo?.image)! as Data)
-        //        }
+    
+        if photo?.image == nil {
+
+            let url = photo?.image_url
+//            container?.performBackgroundTask { [weak self] context in
+    
+                if let imageData = NSData(contentsOf: url!), let image = UIImage(data: imageData as Data) {
+//                    DispatchQueue.main.async {
+                        cell.imageView.image = image
+                        cell.activityIndicator.stopAnimating()
+//                    }
+                } else {
+                    cell.activityIndicator.stopAnimating()
+                }
+//            }
+        } else {
+            cell.activityIndicator.stopAnimating()
+            cell.imageView.image = UIImage(data: (photo?.image)! as Data)
+        }
         return cell
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        
-        if fetchedResultsController != nil {
-            return (fetchedResultsController?.sections?.count)!
-        } else {
-            return 0
-        }
+        return fetchedResultsController?.sections?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        if fetchedResultsController != nil {
-            return (fetchedResultsController?.sections![section].numberOfObjects)!
-        } else {
-            return 0
-        }
+//        print(fetchedResultsController?.sections![section].numberOfObjects)
+        return fetchedResultsController?.sections![section].numberOfObjects ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let collectionViewWidth = collectionView.bounds.width/3.0
         let collectionViewHeight = collectionViewWidth
-        
+
         return CGSize(width: collectionViewWidth, height: collectionViewHeight)
     }
     

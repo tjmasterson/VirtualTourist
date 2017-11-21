@@ -10,17 +10,13 @@ import UIKit
 import CoreData
 
 extension PhotosViewController: NSFetchedResultsControllerDelegate {
-    //    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-    //        // ?
-    //    }
+        func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+            print("will change content")
+        }
     //
-    //    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-    //        collectionView.performBatchUpdates({
-    //            for operation in self.blockOperations {
-    //                operation()
-    //            }
-    //        }, completion: nil)
-    //    }
+        func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+            print("did change content")
+        }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         
@@ -37,9 +33,11 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        
+        print("here is the type")
+        print(type)
         switch type {
             case .insert:
+                print("inserting item now")
                 collectionView?.insertItems(at: [newIndexPath!])
             case .delete:
                 collectionView?.deleteItems(at: [indexPath!])

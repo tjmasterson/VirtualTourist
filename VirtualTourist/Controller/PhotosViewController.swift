@@ -11,11 +11,8 @@ import CoreData
 import MapKit
 
 class PhotosViewController: UIViewController {
-
-    typealias collectionViewOperation = () -> Void
-    var blockOperations = [collectionViewOperation]()
     
-    var selectedPin: Pin?
+    var selectedPin: Pin? { didSet { updateUI() } }
     
     var container: NSPersistentContainer? = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer {
         didSet {
@@ -26,7 +23,7 @@ class PhotosViewController: UIViewController {
     var fetchedResultsController : NSFetchedResultsController<Photo>? {
         didSet {
             fetchedResultsController?.delegate = self
-            self.collectionView?.reloadData()
+//            self.collectionView?.reloadData()
         }
     }
     
@@ -48,6 +45,7 @@ class PhotosViewController: UIViewController {
     }
     
     func updateUI() {
+        print("calling updateUI")
         if let context = container?.viewContext {
             let request: NSFetchRequest<Photo> = Photo.fetchRequest()
             request.sortDescriptors = [NSSortDescriptor(
@@ -55,7 +53,7 @@ class PhotosViewController: UIViewController {
                 ascending: true,
                 selector: #selector(NSString.localizedCaseInsensitiveCompare(_:))
                 )]
-            request.predicate = NSPredicate(format: "pin =  %@", selectedPin!)
+            request.predicate = NSPredicate(format: "any pin = %@", selectedPin!)
             fetchedResultsController = NSFetchedResultsController<Photo>(
                 fetchRequest: request,
                 managedObjectContext: context,
@@ -79,8 +77,14 @@ class PhotosViewController: UIViewController {
     func searchForFlickrPhotos() {
         if let request = flickrRequest() {
             request.fetchFlickrPhotos { [weak self] photos in
-                DispatchQueue.main.async {                      // so we must dispatch back to main queue
+                DispatchQueue.main.async {
                     self?.insertPhotos(photos)
+                    if let context = self?.container?.viewContext {
+                        context.perform {
+                            print("here I am in the context")
+                            self?.updateUI()
+                        }
+                    }
                 }
             }
         }
@@ -89,9 +93,25 @@ class PhotosViewController: UIViewController {
     func insertPhotos(_ photos: [FlickrPhoto]) {
         container?.performBackgroundTask { [weak self] context in
             for photoData in photos {
-                let photo = try? Photo(title: photoData.title, imageURL: photoData.imageURL, context: context)
+                _ = try? Photo.findOrCreatePhoto(title: photoData.title, image_url: photoData.imageURL, pin: (self?.selectedPin)!, in: context)
             }
             try? context.save()
+            self?.printDatabaseStatistics()
+        }
+    }
+    
+    private func printDatabaseStatistics() {
+        if let context = container?.viewContext {
+            context.perform {
+                if Thread.isMainThread {
+                    print("on main thread")
+                } else {
+                    print("off main thread")
+                }
+                if let photoCount = try? context.count(for: Photo.fetchRequest()) {
+                    print("\(photoCount) pins")
+                }
+            }
         }
     }
 

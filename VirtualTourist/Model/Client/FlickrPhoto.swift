@@ -10,13 +10,13 @@ import Foundation
 
 public struct FlickrPhoto {
     public let title: String
-    public let imageURL: URL
+    public let imageURL: String
 //    public let image: NSData?
     
     init?(data: NSDictionary?) {
         guard
             let title = data?.value(forKeyPath: FlickrKey.title) as! String?,
-            let imageURL = URL(string: data?.value(forKeyPath: FlickrKey.imageURL) as! String)
+            let imageURL = data?.value(forKeyPath: FlickrKey.imageURL) as! String?
             else {
                 return nil
         }
