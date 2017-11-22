@@ -58,6 +58,7 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let sections = fetchedResultsController?.sections, sections.count > 0 {
+            print("numberofitemsinsection", sections[section].numberOfObjects)
             return sections[section].numberOfObjects
         } else {
             return 0

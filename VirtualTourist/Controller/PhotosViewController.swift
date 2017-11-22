@@ -12,6 +12,8 @@ import MapKit
 
 class PhotosViewController: UIViewController {
     
+    var blockOperations: [BlockOperation] = []
+    
     var selectedPin: Pin? {
         didSet {
             updateUI()   
@@ -27,7 +29,7 @@ class PhotosViewController: UIViewController {
     var fetchedResultsController : NSFetchedResultsController<Photo>? {
         didSet {
             fetchedResultsController?.delegate = self
-//            self.collectionView?.reloadData()
+            self.collectionView?.reloadData()
         }
     }
     
@@ -81,24 +83,24 @@ class PhotosViewController: UIViewController {
     func searchForFlickrPhotos() {
         if let request = flickrRequest() {
             request.fetchFlickrPhotos { [weak self] photos in
-                DispatchQueue.main.async {
-                    self?.insertPhotos(photos)
-                }
+                self?.insertPhotos(photos)
             }
         }
     }
     
     func insertPhotos(_ photos: [FlickrPhoto]) {
-        container?.performBackgroundTask { [weak self] context in
+        let context = container?.viewContext
+//        container?.performBackgroundTask { [weak self] context in
+        DispatchQueue.main.async {
             for photoData in photos {
-                context.perform {
-                    let photo = Photo(url: photoData.imageURL, title: photoData.title, in: (self?.selectedPin!.managedObjectContext)!)
-                    photo.pin = self?.selectedPin!
+                context!.perform {
+                    let photo = Photo(url: photoData.imageURL, title: photoData.title, in: (self.selectedPin!.managedObjectContext)!)
+                    photo.pin = self.selectedPin!
                 }
             }
-            try? context.save()
+            try? context?.save()
             print("at the end of insertPhotos")
-            self?.printDatabaseStatistics()
+            self.printDatabaseStatistics()
         }
     }
     
