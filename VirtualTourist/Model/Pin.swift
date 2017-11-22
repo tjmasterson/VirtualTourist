@@ -12,6 +12,18 @@ import Foundation
 
 class Pin: NSManagedObject {
     
+    convenience init(lat: Double, lng: Double, in context: NSManagedObjectContext) {
+        if let ent = NSEntityDescription.entity(forEntityName: "Pin", in: context) {
+            self.init(entity: ent, insertInto: context)
+            self.lat = lat
+            self.lng = lng
+            self.hasPhotos = false
+            self.creationDate = NSDate() as Date
+        } else {
+            fatalError("Unable to find Entity name!")
+        }
+    }
+    
     class func findOrCreatePin(lat: Double, lng: Double, in context: NSManagedObjectContext) throws -> Pin {
         let request: NSFetchRequest<Pin> = Pin.fetchRequest()
         request.predicate = NSPredicate(format: "lat = %@ and lng = %@", lat, lng)

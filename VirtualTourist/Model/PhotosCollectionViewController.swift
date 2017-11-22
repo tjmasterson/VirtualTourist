@@ -57,8 +57,11 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        print(fetchedResultsController?.sections![section].numberOfObjects)
-        return fetchedResultsController?.sections![section].numberOfObjects ?? 0
+        if let sections = fetchedResultsController?.sections, sections.count > 0 {
+            return sections[section].numberOfObjects
+        } else {
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

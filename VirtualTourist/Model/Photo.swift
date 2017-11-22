@@ -10,6 +10,16 @@ import UIKit
 import CoreData
 
 class Photo: NSManagedObject {
+    
+    convenience init(url: String, title: String, in context: NSManagedObjectContext) {
+        if let ent = NSEntityDescription.entity(forEntityName: "Photo", in: context) {
+            self.init(entity: ent, insertInto: context)
+            self.image_url = URL(string: url)
+            self.title = title
+        } else {
+            fatalError("Unable to find Entity name!")
+        }
+    }
 
     class func findOrCreatePhoto(title: String, image_url: String, pin: Pin, in context: NSManagedObjectContext) throws -> Photo {
     

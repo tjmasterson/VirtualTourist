@@ -24,7 +24,7 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
         
         switch type {
         case .insert:
-            collectionView.insertSections(set)
+            collectionView?.insertSections(set)
         case .delete:
             collectionView?.deleteSections(set)
         default:
@@ -35,12 +35,29 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         print("here is the type")
         print(type)
+//        if collection empty {
+//            collectionView.reloadData()
+//        }
+//        collectionView.performBatchUpdates({
+//            for update in updates {
+//                switch update {
+//                case .Add(let index):
+//                    collectionView.insertItemsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)])
+//                case .Delete(let index):
+//                    collectionView.deleteItemsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)])
+//                }
+//            }
+//        }, completion: nil)
+        
+    
+        
         switch type {
             case .insert:
                 print("inserting item now")
-                collectionView?.insertItems(at: [newIndexPath!])
+                print(collectionView)
+                collectionView.insertItems(at: [newIndexPath!])
             case .delete:
-                collectionView?.deleteItems(at: [indexPath!])
+                collectionView.deleteItems(at: [indexPath!])
             case .move:
                 let operations: [BlockOperation] = [
                     BlockOperation(block: { self.collectionView.deleteItems(at: [indexPath!])}),
@@ -52,7 +69,7 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
                     }
                 }, completion: nil)
             case .update:
-                collectionView?.reloadItems(at: [indexPath!])
+                collectionView.reloadItems(at: [indexPath!])
         }
     }
     

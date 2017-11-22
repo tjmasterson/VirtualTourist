@@ -12,7 +12,11 @@ import MapKit
 
 class PhotosViewController: UIViewController {
     
-    var selectedPin: Pin? { didSet { updateUI() } }
+    var selectedPin: Pin? {
+        didSet {
+            updateUI()   
+        }
+    }
     
     var container: NSPersistentContainer? = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer {
         didSet {
@@ -53,7 +57,7 @@ class PhotosViewController: UIViewController {
                 ascending: true,
                 selector: #selector(NSString.localizedCaseInsensitiveCompare(_:))
                 )]
-            request.predicate = NSPredicate(format: "any pin = %@", selectedPin!)
+            request.predicate = NSPredicate(format: "pin = %@", selectedPin!)
             fetchedResultsController = NSFetchedResultsController<Photo>(
                 fetchRequest: request,
                 managedObjectContext: context,
@@ -79,12 +83,6 @@ class PhotosViewController: UIViewController {
             request.fetchFlickrPhotos { [weak self] photos in
                 DispatchQueue.main.async {
                     self?.insertPhotos(photos)
-                    if let context = self?.container?.viewContext {
-                        context.perform {
-                            print("here I am in the context")
-                            self?.updateUI()
-                        }
-                    }
                 }
             }
         }
@@ -93,9 +91,13 @@ class PhotosViewController: UIViewController {
     func insertPhotos(_ photos: [FlickrPhoto]) {
         container?.performBackgroundTask { [weak self] context in
             for photoData in photos {
-                _ = try? Photo.findOrCreatePhoto(title: photoData.title, image_url: photoData.imageURL, pin: (self?.selectedPin)!, in: context)
+                context.perform {
+                    let photo = Photo(url: photoData.imageURL, title: photoData.title, in: (self?.selectedPin!.managedObjectContext)!)
+                    photo.pin = self?.selectedPin!
+                }
             }
             try? context.save()
+            print("at the end of insertPhotos")
             self?.printDatabaseStatistics()
         }
     }
