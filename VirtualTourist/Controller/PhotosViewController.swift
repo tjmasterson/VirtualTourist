@@ -12,7 +12,7 @@ import MapKit
 
 class PhotosViewController: UIViewController {
     
-    var blockOperations: [BlockOperation] = []
+    var blockOperations: [() -> Void] = []
     
     var selectedPin: Pin? {
         didSet {
@@ -47,11 +47,17 @@ class PhotosViewController: UIViewController {
         collectionView.dataSource = self
         mapView.delegate = self
         setupMapView()
-        searchForFlickrPhotos()
+        loadOrSearchForPhotos()
+        
+    }
+    
+    func loadOrSearchForPhotos() {
+        if selectedPin?.hasPhotos == false {
+            searchForFlickrPhotos()
+        }
     }
     
     func updateUI() {
-        print("calling updateUI")
         if let context = container?.viewContext {
             let request: NSFetchRequest<Photo> = Photo.fetchRequest()
             request.sortDescriptors = [NSSortDescriptor(
@@ -83,44 +89,44 @@ class PhotosViewController: UIViewController {
     func searchForFlickrPhotos() {
         if let request = flickrRequest() {
             request.fetchFlickrPhotos { [weak self] photos in
-                self?.insertPhotos(photos)
+                if photos.count > 0 {
+                  self?.insertPhotos(photos)
+                }
             }
         }
     }
     
     func insertPhotos(_ photos: [FlickrPhoto]) {
-        let context = container?.viewContext
-//        container?.performBackgroundTask { [weak self] context in
-        DispatchQueue.main.async {
-            for photoData in photos {
-                context!.perform {
-                    let photo = Photo(url: photoData.imageURL, title: photoData.title, in: (self.selectedPin!.managedObjectContext)!)
-                    photo.pin = self.selectedPin!
+        container?.performBackgroundTask { [weak self] context in
+            context.perform {
+                for photoData in photos {
+                    let photo = Photo(url: photoData.imageURL, title: photoData.title, in: (self?.selectedPin!.managedObjectContext)!)
+                    photo.pin = self?.selectedPin!
                 }
+                self?.selectedPin!.hasPhotos = true
             }
-            try? context?.save()
-            print("at the end of insertPhotos")
-            self.printDatabaseStatistics()
+            try? context.save()
+            // self?.printDatabaseStatistics()
         }
     }
     
     private func printDatabaseStatistics() {
         if let context = container?.viewContext {
             context.perform {
-                if Thread.isMainThread {
-                    print("on main thread")
-                } else {
-                    print("off main thread")
-                }
-                if let photoCount = try? context.count(for: Photo.fetchRequest()) {
-                    print("\(photoCount) pins")
-                }
+                let request: NSFetchRequest<Photo> = Photo.fetchRequest()
+                request.sortDescriptors = [NSSortDescriptor(
+                    key: "title",
+                    ascending: true,
+                    selector: #selector(NSString.localizedCaseInsensitiveCompare(_:))
+                    )]
+                request.predicate = NSPredicate(format: "pin = %@", self.selectedPin!)
+                let results = try? context.fetch(request)
+                print(results?.last?.objectID)
             }
         }
     }
 
     func setupFlowLayout() {
-        
         let space: CGFloat = 3
         let dimension = (view.frame.width - 2 * space) / 3
         

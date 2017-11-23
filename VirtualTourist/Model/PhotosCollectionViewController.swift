@@ -25,26 +25,41 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionViewCell", for: indexPath) as! PhotoCollectionViewCell
         
-        cell.imageView.image = UIImage(named: "defaultImage")
+        cell.imageView.image = UIImage(named: "defaultimage")
         cell.activityIndicator.startAnimating()
         cell.imageView.contentMode = .scaleAspectFit
         
         let photo = self.fetchedResultsController?.object(at: indexPath) as? Photo
-    
+        
+        if Thread.isMainThread {
+            print("outside on main thread")
+        } else {
+            print("outside off main thread")
+        }
         if photo?.image == nil {
-
             let url = photo?.image_url
-//            container?.performBackgroundTask { [weak self] context in
-    
+            container?.performBackgroundTask { [weak self] context in
+                
+                if Thread.isMainThread {
+                    print("inside on main thread")
+                } else {
+                    print("inside off main thread")
+                }
                 if let imageData = NSData(contentsOf: url!), let image = UIImage(data: imageData as Data) {
-//                    DispatchQueue.main.async {
+                    DispatchQueue.main.async {
+                        if Thread.isMainThread {
+                            print("inside inside on main thread")
+                        } else {
+                            print("inside inside off main thread")
+                        }
+                        
                         cell.imageView.image = image
                         cell.activityIndicator.stopAnimating()
-//                    }
+                    }
                 } else {
                     cell.activityIndicator.stopAnimating()
                 }
-//            }
+            }
         } else {
             cell.activityIndicator.stopAnimating()
             cell.imageView.image = UIImage(data: (photo?.image)! as Data)
