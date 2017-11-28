@@ -11,17 +11,19 @@ import CoreData
 
 extension PhotosViewController: NSFetchedResultsControllerDelegate {
     
-        func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-            print("will change content")
-        }
-    
-        func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-            collectionView?.performBatchUpdates({
-                for operation in blockOperations {
-                    operation()
-                }
-            }, completion: nil)
-        }
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print("will controllerWillChangeContent")
+        blockOperations.removeAll()
+    }
+
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print("did controllerDidChangeContent, blockOperations count: \(blockOperations.count)")
+        collectionView?.performBatchUpdates({
+            for operation in blockOperations {
+                operation()
+            }
+        }, completion: nil)
+    }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         let set = IndexSet(integer: sectionIndex)

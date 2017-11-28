@@ -41,7 +41,6 @@ class PinsViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     private func createPin(lat: Double, lng: Double) {
-        print("starting database load")
         if let context = container?.viewContext {
             selectedPin = try? Pin.findOrCreatePin(lat: lat, lng: lng, in: context)
             do {
@@ -49,8 +48,7 @@ class PinsViewController: UIViewController, UIGestureRecognizerDelegate {
             } catch {
                 print(error)
             }
-            print("done loading database")
-            self.printDatabaseStatistics()
+//            self.printDatabaseStatistics()
         }
     }
     

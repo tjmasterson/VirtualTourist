@@ -17,7 +17,6 @@ class Pin: NSManagedObject {
             self.init(entity: ent, insertInto: context)
             self.lat = lat
             self.lng = lng
-            self.hasPhotos = false
             self.creationDate = NSDate() as Date
         } else {
             fatalError("Unable to find Entity name!")
@@ -42,7 +41,6 @@ class Pin: NSManagedObject {
         pin.lat = lat
         pin.lng = lng
         pin.creationDate = NSDate() as Date
-        pin.hasPhotos = false
         return pin
     }
     
@@ -54,4 +52,5 @@ class Pin: NSManagedObject {
         
         return "\(bottomLeftLng),\(bottomLeftLat),\(topRightLng),\(topRightLat)"
     }
+
 }

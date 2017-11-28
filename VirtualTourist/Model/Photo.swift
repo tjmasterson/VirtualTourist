@@ -15,7 +15,9 @@ class Photo: NSManagedObject {
         if let ent = NSEntityDescription.entity(forEntityName: "Photo", in: context) {
             self.init(entity: ent, insertInto: context)
             self.image_url = URL(string: url)
+            self.image = NSData(contentsOf: self.image_url!)! as Data
             self.title = title
+            self.creationDate = NSDate() as Date
         } else {
             fatalError("Unable to find Entity name!")
         }
@@ -40,5 +42,28 @@ class Photo: NSManagedObject {
         photo.image_url = URL(string: image_url)
         photo.pin = try? Pin.findOrCreatePin(lat: pin.lat, lng: pin.lng, in: context)
         return photo
+    }
+    
+    class func saveImageDataForPhotos(withPin pin: Pin, in context: NSManagedObjectContext) throws -> Void {
+        let request: NSFetchRequest<Photo> = Photo.fetchRequest()
+        request.predicate = NSPredicate(format: "pin = %@", pin)
+        do {
+            let photos = try context.fetch(request)
+            if photos.count > 0 {
+                for photo in photos {
+                    if let url = photo.image_url {
+                        print("in here")
+                        photo.image = NSData(contentsOf: url)! as Data
+                    }
+                }
+                do {
+                    try context.save()
+                } catch {
+                    throw error
+                }
+            }
+        } catch {
+            throw error
+        }
     }
 }

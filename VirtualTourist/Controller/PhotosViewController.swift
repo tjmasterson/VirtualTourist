@@ -48,11 +48,27 @@ class PhotosViewController: UIViewController {
         mapView.delegate = self
         setupMapView()
         loadOrSearchForPhotos()
-        
     }
     
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        container?.performBackgroundTask { [weak self] context in
+//            print("this is trying to save")
+//            context.perform {
+//                do {
+//                    try Photo.saveImageDataForPhotos(withPin: (self?.selectedPin)!, in: (self?.selectedPin!.managedObjectContext)!)
+//                } catch {
+//                    print(error)
+//                }
+//                
+//            }
+//        }
+//    }
+    
     func loadOrSearchForPhotos() {
-        if selectedPin?.hasPhotos == false {
+        printDatabaseStatistics()
+        let pinPhotosCount = selectedPin?.photos?.count ?? 0
+        if pinPhotosCount <=  0 {
             searchForFlickrPhotos()
         }
     }
@@ -61,9 +77,8 @@ class PhotosViewController: UIViewController {
         if let context = container?.viewContext {
             let request: NSFetchRequest<Photo> = Photo.fetchRequest()
             request.sortDescriptors = [NSSortDescriptor(
-                key: "title",
-                ascending: true,
-                selector: #selector(NSString.localizedCaseInsensitiveCompare(_:))
+                key: "creationDate",
+                ascending: true
                 )]
             request.predicate = NSPredicate(format: "pin = %@", selectedPin!)
             fetchedResultsController = NSFetchedResultsController<Photo>(
@@ -90,23 +105,21 @@ class PhotosViewController: UIViewController {
         if let request = flickrRequest() {
             request.fetchFlickrPhotos { [weak self] photos in
                 if photos.count > 0 {
-                  self?.insertPhotos(photos)
+                  self?.updateDatabase(with: photos)
                 }
             }
         }
     }
     
-    func insertPhotos(_ photos: [FlickrPhoto]) {
+    func updateDatabase(with photos: [FlickrPhoto]) {
         container?.performBackgroundTask { [weak self] context in
             context.perform {
                 for photoData in photos {
                     let photo = Photo(url: photoData.imageURL, title: photoData.title, in: (self?.selectedPin!.managedObjectContext)!)
                     photo.pin = self?.selectedPin!
                 }
-                self?.selectedPin!.hasPhotos = true
+                try? context.save()
             }
-            try? context.save()
-            // self?.printDatabaseStatistics()
         }
     }
     
@@ -121,7 +134,13 @@ class PhotosViewController: UIViewController {
                     )]
                 request.predicate = NSPredicate(format: "pin = %@", self.selectedPin!)
                 let results = try? context.fetch(request)
-                print(results?.last?.objectID)
+                var count = 0
+                for photo in results! {
+                    if photo.image != nil {
+                        count += 1
+                    }
+                }
+                print(count)
             }
         }
     }

@@ -22,48 +22,32 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
     //    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
+        print("calling collectionView cellForRowAt")
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionViewCell", for: indexPath) as! PhotoCollectionViewCell
-        
-        cell.imageView.image = UIImage(named: "defaultimage")
         cell.activityIndicator.startAnimating()
         cell.imageView.contentMode = .scaleAspectFit
         
-        let photo = self.fetchedResultsController?.object(at: indexPath) as? Photo
-        
-        if Thread.isMainThread {
-            print("outside on main thread")
-        } else {
-            print("outside off main thread")
-        }
-        if photo?.image == nil {
-            let url = photo?.image_url
-            container?.performBackgroundTask { [weak self] context in
-                
-                if Thread.isMainThread {
-                    print("inside on main thread")
-                } else {
-                    print("inside off main thread")
-                }
+        let photo = self.fetchedResultsController?.object(at: indexPath)
+
+        if photo?.image != nil {
+            cell.activityIndicator.stopAnimating()
+            cell.imageView.image = UIImage(data: (photo?.image)! as Data)
+        } else if photo?.image == nil {
+            container?.performBackgroundTask { context in
+                let url = photo?.image_url
                 if let imageData = NSData(contentsOf: url!), let image = UIImage(data: imageData as Data) {
                     DispatchQueue.main.async {
-                        if Thread.isMainThread {
-                            print("inside inside on main thread")
-                        } else {
-                            print("inside inside off main thread")
-                        }
-                        
                         cell.imageView.image = image
                         cell.activityIndicator.stopAnimating()
                     }
                 } else {
-                    cell.activityIndicator.stopAnimating()
+                    DispatchQueue.main.async {
+                        cell.activityIndicator.stopAnimating()
+                    }
                 }
             }
-        } else {
-            cell.activityIndicator.stopAnimating()
-            cell.imageView.image = UIImage(data: (photo?.image)! as Data)
         }
+        
         return cell
     }
     
@@ -73,7 +57,6 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let sections = fetchedResultsController?.sections, sections.count > 0 {
-            print("numberofitemsinsection", sections[section].numberOfObjects)
             return sections[section].numberOfObjects
         } else {
             return 0
@@ -81,7 +64,7 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let collectionViewWidth = collectionView.bounds.width/3.0
+        let collectionViewWidth = collectionView.bounds.width / 3.0
         let collectionViewHeight = collectionViewWidth
 
         return CGSize(width: collectionViewWidth, height: collectionViewHeight)
