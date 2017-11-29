@@ -18,6 +18,7 @@ public class Request: NSObject {
     public let diableJSONCallback = FlickrParamValues.DisableJSONCallback
     public let mediumURL = FlickrParamValues.MediumURL
     public let withExtension: String? = nil
+    public let perPage = FlickrParamValues.PerPage
     
     // designated initializer
     public init(_ parameters: Dictionary<String, String> = [:]) {
@@ -27,19 +28,25 @@ public class Request: NSObject {
         params[FlickrParamKeys.Format] = responseFormat
         params[FlickrParamKeys.NoJSONCallback] = diableJSONCallback
         params[FlickrParamKeys.Extras] = mediumURL
+        params[FlickrParamKeys.PerPage] = perPage
         self.parameters = params
     }
     
-    public func fetchFlickrPhotos(_ handler: @escaping ([FlickrPhoto]) -> Void) {
+    public func fetchFlickrPhotos(_ handler: @escaping ([FlickrPhoto], NSDictionary) -> Void) {
         let _ = performRequest(withExtension) { (results, error) in
             var flickrPhotos = [FlickrPhoto]()
             var allPhotos: NSArray?
+            var metaData: NSDictionary?
 
             if let dictionary = results as? NSDictionary {
                 if
                     let photosCollectionData = dictionary[FlickrResponseKeys.PhotosCollectionData] as? NSDictionary,
-                    let photos = photosCollectionData[FlickrResponseKeys.PhotosCollection] as? NSArray {
+                    let photos = photosCollectionData[FlickrResponseKeys.PhotosCollection] as? NSArray,
+                    let page = photosCollectionData[FlickrResponseKeys.Page] as? Int,
+                    let pages = photosCollectionData[FlickrResponseKeys.Pages] as? Int
+                    {
                     allPhotos = photos
+                    metaData = ["pages": pages, "page": page]
                 } else if let photo = FlickrPhoto(data: dictionary) {
                     flickrPhotos = [photo]
                 }
@@ -55,7 +62,7 @@ public class Request: NSObject {
                 }
             }
             
-            handler(flickrPhotos)
+            handler(flickrPhotos, metaData!)
         }
     }
 

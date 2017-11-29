@@ -12,12 +12,10 @@ import CoreData
 extension PhotosViewController: NSFetchedResultsControllerDelegate {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("will controllerWillChangeContent")
         blockOperations.removeAll()
     }
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("did controllerDidChangeContent, blockOperations count: \(blockOperations.count)")
         collectionView?.performBatchUpdates({
             for operation in blockOperations {
                 operation()

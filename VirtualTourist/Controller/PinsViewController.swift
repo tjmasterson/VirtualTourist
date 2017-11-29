@@ -46,26 +46,12 @@ class PinsViewController: UIViewController, UIGestureRecognizerDelegate {
             do {
                 try context.save()
             } catch {
-                print(error)
-            }
-//            self.printDatabaseStatistics()
-        }
-    }
-    
-    private func printDatabaseStatistics() {
-        if let context = container?.viewContext {
-            context.perform {
-                if Thread.isMainThread {
-                    print("on main thread")
-                } else {
-                    print("off main thread")
-                }
-                if let pinCount = try? context.count(for: Pin.fetchRequest()) {
-                    print("\(pinCount) pins")
-                }
+                ErrorNotificationViewController.sharedInstance().notify(message: "There was a problem saving the Pin")
+                ErrorNotificationViewController.sharedInstance().log(error)
             }
         }
     }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -173,7 +159,7 @@ extension PinsViewController: MKMapViewDelegate {
             selectedPin = pin
             performSegue(withIdentifier: "PinSelected", sender: self)
         } else {
-            print("error getting pin")
+            ErrorNotificationViewController.sharedInstance().notify(message: "There was a problem finding the Pin")
         }
     }
 }

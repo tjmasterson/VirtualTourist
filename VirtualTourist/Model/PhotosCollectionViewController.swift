@@ -10,25 +10,19 @@ import UIKit
 
 extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    //        let cell = collectionView.cellForItem(at: indexPath) as! PhotoCollectionViewCell
-    //        if let index = selectedIndexes.index(of: indexPath) {
-    //            selectedIndexes.remove(at: index)
-    //            cell.colorPanel.isHidden = true
-    //        } else {
-    //            cell.colorPanel.isHidden = false
-    //            selectedIndexes.append(indexPath)
-    //        }
-    //    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let photo = self.fetchedResultsController?.object(at: indexPath)
+        let context = container?.viewContext
+        context?.delete(photo!)
+    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print("calling collectionView cellForRowAt")
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionViewCell", for: indexPath) as! PhotoCollectionViewCell
+        cell.imageView.image = UIImage(named: "defaultimage")
         cell.activityIndicator.startAnimating()
-        cell.imageView.contentMode = .scaleAspectFit
         
         let photo = self.fetchedResultsController?.object(at: indexPath)
-
+        
         if photo?.image != nil {
             cell.activityIndicator.stopAnimating()
             cell.imageView.image = UIImage(data: (photo?.image)! as Data)
@@ -40,14 +34,11 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
                         cell.imageView.image = image
                         cell.activityIndicator.stopAnimating()
                     }
-                } else {
-                    DispatchQueue.main.async {
-                        cell.activityIndicator.stopAnimating()
-                    }
                 }
             }
         }
         
+        cell.activityIndicator.stopAnimating()
         return cell
     }
     

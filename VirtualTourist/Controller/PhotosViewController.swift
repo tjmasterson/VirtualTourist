@@ -50,23 +50,7 @@ class PhotosViewController: UIViewController {
         loadOrSearchForPhotos()
     }
     
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        container?.performBackgroundTask { [weak self] context in
-//            print("this is trying to save")
-//            context.perform {
-//                do {
-//                    try Photo.saveImageDataForPhotos(withPin: (self?.selectedPin)!, in: (self?.selectedPin!.managedObjectContext)!)
-//                } catch {
-//                    print(error)
-//                }
-//                
-//            }
-//        }
-//    }
-    
     func loadOrSearchForPhotos() {
-        printDatabaseStatistics()
         let pinPhotosCount = selectedPin?.photos?.count ?? 0
         if pinPhotosCount <=  0 {
             searchForFlickrPhotos()
@@ -103,44 +87,25 @@ class PhotosViewController: UIViewController {
     
     func searchForFlickrPhotos() {
         if let request = flickrRequest() {
-            request.fetchFlickrPhotos { [weak self] photos in
+            request.fetchFlickrPhotos { [weak self] (photos, metaData) in
                 if photos.count > 0 {
-                  self?.updateDatabase(with: photos)
+                    self?.updateDatabase(with: photos, and: metaData)
                 }
             }
         }
     }
     
-    func updateDatabase(with photos: [FlickrPhoto]) {
+    func updateDatabase(with photos: [FlickrPhoto], and metaData: NSDictionary) {
         container?.performBackgroundTask { [weak self] context in
             context.perform {
                 for photoData in photos {
                     let photo = Photo(url: photoData.imageURL, title: photoData.title, in: (self?.selectedPin!.managedObjectContext)!)
                     photo.pin = self?.selectedPin!
+                    self?.selectedPin!.page = metaData["page"] as! Int
+                    self?.selectedPin!.pages = metaData["pages"] as! Int
                 }
+                
                 try? context.save()
-            }
-        }
-    }
-    
-    private func printDatabaseStatistics() {
-        if let context = container?.viewContext {
-            context.perform {
-                let request: NSFetchRequest<Photo> = Photo.fetchRequest()
-                request.sortDescriptors = [NSSortDescriptor(
-                    key: "title",
-                    ascending: true,
-                    selector: #selector(NSString.localizedCaseInsensitiveCompare(_:))
-                    )]
-                request.predicate = NSPredicate(format: "pin = %@", self.selectedPin!)
-                let results = try? context.fetch(request)
-                var count = 0
-                for photo in results! {
-                    if photo.image != nil {
-                        count += 1
-                    }
-                }
-                print(count)
             }
         }
     }

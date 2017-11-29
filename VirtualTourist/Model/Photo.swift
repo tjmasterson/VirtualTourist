@@ -43,27 +43,4 @@ class Photo: NSManagedObject {
         photo.pin = try? Pin.findOrCreatePin(lat: pin.lat, lng: pin.lng, in: context)
         return photo
     }
-    
-    class func saveImageDataForPhotos(withPin pin: Pin, in context: NSManagedObjectContext) throws -> Void {
-        let request: NSFetchRequest<Photo> = Photo.fetchRequest()
-        request.predicate = NSPredicate(format: "pin = %@", pin)
-        do {
-            let photos = try context.fetch(request)
-            if photos.count > 0 {
-                for photo in photos {
-                    if let url = photo.image_url {
-                        print("in here")
-                        photo.image = NSData(contentsOf: url)! as Data
-                    }
-                }
-                do {
-                    try context.save()
-                } catch {
-                    throw error
-                }
-            }
-        } catch {
-            throw error
-        }
-    }
 }
