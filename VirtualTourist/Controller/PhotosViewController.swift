@@ -13,13 +13,7 @@ import MapKit
 class PhotosViewController: UIViewController {
     
     var blockOperations: [() -> Void] = []
-    
-    var selectedPin: Pin? {
-        didSet {
-            updateUI()   
-        }
-    }
-    
+    var selectedPin: Pin?
     var container: NSPersistentContainer? = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer {
         didSet {
             updateUI()
@@ -36,9 +30,31 @@ class PhotosViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var newCollectionButton: UIButton!
     
-    @IBAction func doneButtonPressed(_ sender: Any) {
+    @IBAction func doneButtonPressed(_ sender: UIBarButtonItem) {
         dismiss(animated: true)
+    }
+    
+    @IBAction func newCollectionButtonPressed(_ sender: UIButton) {
+        newCollectionButton.isEnabled = false
+        let parameters = selectedPin?.buildNewCollectionParams()
+        if parameters != nil, let context = container?.viewContext {
+            
+            let indexPaths = collectionView.indexPathsForVisibleItems
+            for indexPath in indexPaths {
+                let cell = collectionView.cellForItem(at: indexPath) as! PhotoCollectionViewCell
+                cell.imageView.image = UIImage(named: "defaultimage")
+            }
+            
+            let photos = fetchedResultsController?.fetchedObjects
+            for photo in photos! {
+                context.delete(photo)
+            }
+            try? context.save()
+            updateUI()
+        }
+        searchForFlickrPhotos(parameters)
     }
     
     override func viewDidLoad() {
@@ -46,17 +62,26 @@ class PhotosViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         mapView.delegate = self
+        newCollectionButton.isEnabled = false
         setupMapView()
         loadOrSearchForPhotos()
     }
     
+    /*
+     * Load existing photos or execute a new search
+     */
     func loadOrSearchForPhotos() {
         let pinPhotosCount = selectedPin?.photos?.count ?? 0
         if pinPhotosCount <=  0 {
             searchForFlickrPhotos()
+        } else {
+            newCollectionButton.isEnabled = true
         }
     }
     
+    /*
+     *  Perform the NSFetchRequest for all the photos associated with a pin and reload the UICollectionView
+     */
     func updateUI() {
         if let context = container?.viewContext {
             let request: NSFetchRequest<Photo> = Photo.fetchRequest()
@@ -77,17 +102,29 @@ class PhotosViewController: UIViewController {
         }
     }
     
-    func flickrRequest() -> Request? {
+    /*
+     * Build the request for photos, optionally passing page number for a new collection of photos
+     */
+    func flickrRequest(_ parameters: [String: String]?) -> Request? {
         if let bBox = selectedPin?.getBBoxString() {
-            let parameters = [FlickrParamKeys.BoundingBox: bBox]
-            return Request(parameters)
+            var params = [FlickrParamKeys.BoundingBox: bBox]
+            if parameters != nil {
+                params.merge(parameters!) { (current, _) in current }
+            }
+            return Request(params)
         }
         return nil
     }
     
-    func searchForFlickrPhotos() {
-        if let request = flickrRequest() {
+    /*
+     * Execute the search for photos
+     */
+    func searchForFlickrPhotos(_ parameters: [String: String]? = nil) {
+        if let request = flickrRequest(parameters) {
             request.fetchFlickrPhotos { [weak self] (photos, metaData) in
+                DispatchQueue.main.async {
+                    self?.newCollectionButton.isEnabled = true
+                }
                 if photos.count > 0 {
                     self?.updateDatabase(with: photos, and: metaData)
                 }
@@ -95,16 +132,18 @@ class PhotosViewController: UIViewController {
         }
     }
     
+    /*
+     * Save all photos for a pin and update the page number used to make the request for photos
+     */
     func updateDatabase(with photos: [FlickrPhoto], and metaData: NSDictionary) {
         container?.performBackgroundTask { [weak self] context in
             context.perform {
                 for photoData in photos {
                     let photo = Photo(url: photoData.imageURL, title: photoData.title, in: (self?.selectedPin!.managedObjectContext)!)
                     photo.pin = self?.selectedPin!
-                    self?.selectedPin!.page = metaData["page"] as! Int
-                    self?.selectedPin!.pages = metaData["pages"] as! Int
+                    self?.selectedPin!.page = Int64(metaData["page"] as! Int)
+                    self?.selectedPin!.pages = Int64(metaData["pages"] as! Int)
                 }
-                
                 try? context.save()
             }
         }

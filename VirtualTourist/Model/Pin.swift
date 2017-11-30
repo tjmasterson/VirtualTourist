@@ -52,5 +52,14 @@ class Pin: NSManagedObject {
         
         return "\(bottomLeftLng),\(bottomLeftLat),\(topRightLng),\(topRightLat)"
     }
+    
+    func buildNewCollectionParams() -> [String: String]? {
+        let page = self.page
+        let pages = self.pages
+        if pages > 0, page > 0, page < pages {
+            return [FlickrParamKeys.Page: String(page + 1)]
+        }
+        return nil
+    }
 
 }

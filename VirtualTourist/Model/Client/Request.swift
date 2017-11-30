@@ -22,14 +22,7 @@ public class Request: NSObject {
     
     // designated initializer
     public init(_ parameters: Dictionary<String, String> = [:]) {
-        var params = parameters
-        params[FlickrParamKeys.Method] = searchMethod
-        params[FlickrParamKeys.APIKey] = apiKey
-        params[FlickrParamKeys.Format] = responseFormat
-        params[FlickrParamKeys.NoJSONCallback] = diableJSONCallback
-        params[FlickrParamKeys.Extras] = mediumURL
-        params[FlickrParamKeys.PerPage] = perPage
-        self.parameters = params
+        self.parameters = parameters
     }
     
     public func fetchFlickrPhotos(_ handler: @escaping ([FlickrPhoto], NSDictionary) -> Void) {
@@ -115,12 +108,20 @@ public class Request: NSObject {
         return data
     }
     
-    private func urlFromParams(_ params: [String: String], withPathExtension: String?) -> URL {
+    private func urlFromParams(_ parameters: [String: String], withPathExtension: String?) -> URL {
+        var params = parameters
         var urlComponents = URLComponents()
         urlComponents.scheme = Flickr.APIScheme
         urlComponents.host = Flickr.APIHost
         urlComponents.path = Flickr.APIPath + (withPathExtension ?? "")
         urlComponents.queryItems = [URLQueryItem]()
+        
+        params[FlickrParamKeys.Method] = searchMethod
+        params[FlickrParamKeys.APIKey] = apiKey
+        params[FlickrParamKeys.Format] = responseFormat
+        params[FlickrParamKeys.NoJSONCallback] = diableJSONCallback
+        params[FlickrParamKeys.Extras] = mediumURL
+        params[FlickrParamKeys.PerPage] = perPage
         
         for (key, value) in params {
             let queryItem = URLQueryItem(name: key, value: "\(value)")

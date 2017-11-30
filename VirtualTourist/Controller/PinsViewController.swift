@@ -64,6 +64,7 @@ class PinsViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewWillAppear(animated)
         plotPins()
     }
+    
     /*
      * Plot all fetched pins on map view
      */
