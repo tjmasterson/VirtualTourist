@@ -39,7 +39,7 @@ public struct FlickrParamValues {
     static let DisableJSONCallback = "1" // 1 == yes
     static let MediumURL = "url_m"
     static let UseSafeSearch = "1"
-    static let PerPage = "100"
+    static let PerPage = "30"
 }
 
 public struct FlickrResponseKeys {

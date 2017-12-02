@@ -22,7 +22,6 @@
 		A1F103451FB8AAF8004248BC /* PhotoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F103441FB8AAF8004248BC /* PhotoDetailViewController.swift */; };
 		A1F103471FB8AB64004248BC /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F103461FB8AB64004248BC /* PhotoCollectionViewCell.swift */; };
 		A1F1034A1FB8ABDF004248BC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F103491FB8ABDF004248BC /* Constants.swift */; };
-		A1F1034C1FB8ABFD004248BC /* ConvenienceMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F1034B1FB8ABFD004248BC /* ConvenienceMethods.swift */; };
 		A1F1034E1FB8AC1A004248BC /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F1034D1FB8AC1A004248BC /* Client.swift */; };
 		A1F103501FB8B720004248BC /* ErrorNotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F1034F1FB8B720004248BC /* ErrorNotificationViewController.swift */; };
 		A1F103521FB8C1A3004248BC /* FetchedResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F103511FB8C1A3004248BC /* FetchedResultsViewController.swift */; };
@@ -46,7 +45,6 @@
 		A1F103441FB8AAF8004248BC /* PhotoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewController.swift; sourceTree = "<group>"; };
 		A1F103461FB8AB64004248BC /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		A1F103491FB8ABDF004248BC /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		A1F1034B1FB8ABFD004248BC /* ConvenienceMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvenienceMethods.swift; sourceTree = "<group>"; };
 		A1F1034D1FB8AC1A004248BC /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		A1F1034F1FB8B720004248BC /* ErrorNotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorNotificationViewController.swift; sourceTree = "<group>"; };
 		A1F103511FB8C1A3004248BC /* FetchedResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsViewController.swift; sourceTree = "<group>"; };
@@ -138,7 +136,6 @@
 			isa = PBXGroup;
 			children = (
 				A1F103491FB8ABDF004248BC /* Constants.swift */,
-				A1F1034B1FB8ABFD004248BC /* ConvenienceMethods.swift */,
 				A1F1034D1FB8AC1A004248BC /* Client.swift */,
 				A1DF7DCB1FB9CC440027982B /* Request.swift */,
 				A1DF7DCD1FB9CC6A0027982B /* FlickrPhoto.swift */,
@@ -218,7 +215,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1F1034C1FB8ABFD004248BC /* ConvenienceMethods.swift in Sources */,
 				A1DF7DCE1FB9CC6A0027982B /* FlickrPhoto.swift in Sources */,
 				A1F1033F1FB8AA52004248BC /* Photo.swift in Sources */,
 				A1F103471FB8AB64004248BC /* PhotoCollectionViewCell.swift in Sources */,
