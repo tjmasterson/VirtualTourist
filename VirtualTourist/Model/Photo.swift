@@ -40,7 +40,7 @@ class Photo: NSManagedObject {
         let photo = Photo(context: context)
         photo.title = title
         photo.image_url = URL(string: image_url)
-        photo.pin = try? Pin.findOrCreatePin(lat: pin.lat, lng: pin.lng, in: context)
+//        photo.pin = try? Pin.findOrCreatePin(lat: pin.lat, lng: pin.lng, in: context)
         return photo
     }
 }

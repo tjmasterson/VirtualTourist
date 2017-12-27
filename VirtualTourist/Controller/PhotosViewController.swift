@@ -139,8 +139,8 @@ class PhotosViewController: UIViewController {
         if let context = container?.viewContext {
             context.perform {
                 for photoData in photos {
-                    let photo = Photo(url: photoData.imageURL, title: photoData.title, in: context)
-                    photo.pin = self.selectedPin!
+                    let photo = try? Photo.findOrCreatePhoto(title: photoData.title, image_url: photoData.imageURL, pin: self.selectedPin!, in: context)
+                    photo!.pin = self.selectedPin!
                     self.selectedPin!.page = Int64(metaData["page"] as! Int)
                     self.selectedPin!.pages = Int64(metaData["pages"] as! Int)
                 }

@@ -27,13 +27,11 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
             cell.imageView.image = UIImage(data: (photo?.image)! as Data)
         } else if photo?.image == nil {
             cell.imageView.image = UIImage(named: "defaultimage")
-            let url = String(describing: photo?.image_url)
-            
+            let url = String(describing: (photo?.image_url)!)
             downloadImage(imagePath: url) { (imageData, error) in
                 guard error == nil else {
                     return
                 }
-                
                 let image = UIImage(data: imageData!)
                 DispatchQueue.main.async {
                     cell.imageView.image = image
