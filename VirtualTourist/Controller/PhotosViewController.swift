@@ -136,13 +136,17 @@ class PhotosViewController: UIViewController {
      * Save all photos for a pin and update the page number used to make the request for photos
      */
     func updateDatabase(with photos: [FlickrPhoto], and metaData: NSDictionary) {
+        
+    
         container?.performBackgroundTask { [weak self] context in
             context.perform {
                 for photoData in photos {
-                    let photo = Photo(url: photoData.imageURL, title: photoData.title, in: (self?.selectedPin!.managedObjectContext)!)
-                    photo.pin = self?.selectedPin!
-                    self?.selectedPin!.page = Int64(metaData["page"] as! Int)
-                    self?.selectedPin!.pages = Int64(metaData["pages"] as! Int)
+                    DispatchQueue.main.async {
+                        let photo = Photo(url: photoData.imageURL, title: photoData.title, in: (self?.selectedPin!.managedObjectContext)!)
+                        photo.pin = self?.selectedPin!
+                        self?.selectedPin!.page = Int64(metaData["page"] as! Int)
+                        self?.selectedPin!.pages = Int64(metaData["pages"] as! Int)
+                    }
                 }
                 try? context.save()
             }

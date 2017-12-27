@@ -18,7 +18,6 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionViewCell", for: indexPath) as! PhotoCollectionViewCell
-        cell.imageView.image = UIImage(named: "defaultimage")
         cell.activityIndicator.startAnimating()
         
         let photo = self.fetchedResultsController?.object(at: indexPath)
@@ -27,19 +26,42 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
             cell.activityIndicator.stopAnimating()
             cell.imageView.image = UIImage(data: (photo?.image)! as Data)
         } else if photo?.image == nil {
-            container?.performBackgroundTask { context in
-                let url = photo?.image_url
-                if let imageData = NSData(contentsOf: url!), let image = UIImage(data: imageData as Data) {
-                    DispatchQueue.main.async {
-                        cell.imageView.image = image
-                        cell.activityIndicator.stopAnimating()
-                    }
+            cell.imageView.image = UIImage(named: "defaultimage")
+            let url = String(describing: photo?.image_url)
+            
+            downloadImage(imagePath: url) { (imageData, error) in
+                guard error == nil else {
+                    return
+                }
+                
+                let image = UIImage(data: imageData!)
+                DispatchQueue.main.async {
+                    cell.imageView.image = image
+                    cell.activityIndicator.stopAnimating()
                 }
             }
         }
         
         cell.activityIndicator.stopAnimating()
         return cell
+    }
+    
+    func downloadImage( imagePath:String, completionHandler: @escaping (_ imageData: Data?, _ errorString: String?) -> Void){
+        let session = URLSession.shared
+        let imgURL = NSURL(string: imagePath)
+        let request: NSURLRequest = NSURLRequest(url: imgURL! as URL)
+        
+        let task = session.dataTask(with: request as URLRequest) {data, response, downloadError in
+            
+            if downloadError != nil {
+                completionHandler(nil, "Could not download image \(imagePath)")
+            } else {
+                
+                completionHandler(data, nil)
+            }
+        }
+        
+        task.resume()
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
