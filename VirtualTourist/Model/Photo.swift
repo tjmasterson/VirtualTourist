@@ -15,7 +15,7 @@ class Photo: NSManagedObject {
         if let ent = NSEntityDescription.entity(forEntityName: "Photo", in: context) {
             self.init(entity: ent, insertInto: context)
             self.image_url = URL(string: url)
-            self.image = NSData(contentsOf: (self.image_url ?? nil)!) as Data?
+            self.image = nil // NSData(contentsOf: (self.image_url ?? nil)!) as Data?
             self.title = title
             self.creationDate = NSDate() as Date
         } else {

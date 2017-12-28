@@ -14,6 +14,7 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let photo = self.fetchedResultsController?.object(at: indexPath)
         let context = container?.viewContext
         context?.delete(photo!)
+        try? context?.save()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -24,10 +25,11 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         if photo?.image != nil {
             cell.activityIndicator.stopAnimating()
+            cell.imageView.image = UIImage(named: "defaultimage")
             cell.imageView.image = UIImage(data: (photo?.image)! as Data)
         } else if photo?.image == nil {
-            cell.imageView.image = UIImage(named: "defaultimage")
             let url = String(describing: (photo?.image_url)!)
+            cell.imageView.image = UIImage(named: "defaultimage")
             downloadImage(imagePath: url) { (imageData, error) in
                 guard error == nil else {
                     return
@@ -36,6 +38,8 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 DispatchQueue.main.async {
                     cell.imageView.image = image
                     cell.activityIndicator.stopAnimating()
+                    photo?.image = imageData!
+                    try? photo?.managedObjectContext?.save()
                 }
             }
         }

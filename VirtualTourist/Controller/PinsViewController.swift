@@ -62,6 +62,9 @@ class PinsViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if mapView.annotations.count != 0 {
+            mapView.removeAnnotations(mapView.annotations)
+        }
         plotPins()
     }
     
