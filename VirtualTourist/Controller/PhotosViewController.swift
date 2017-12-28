@@ -54,6 +54,7 @@ class PhotosViewController: UIViewController {
             try? context.save()
             updateUI()
         }
+        
         searchForFlickrPhotos(parameters)
     }
     
