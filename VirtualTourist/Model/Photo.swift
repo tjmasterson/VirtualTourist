@@ -15,7 +15,7 @@ class Photo: NSManagedObject {
         if let ent = NSEntityDescription.entity(forEntityName: "Photo", in: context) {
             self.init(entity: ent, insertInto: context)
             self.image_url = URL(string: url)
-            self.image = NSData(contentsOf: (self.image_url ?? nil)!) as Data?
+            self.image = nil // NSData(contentsOf: (self.image_url ?? nil)!) as Data?
             self.title = title
             self.creationDate = NSDate() as Date
         } else {
@@ -40,7 +40,7 @@ class Photo: NSManagedObject {
         let photo = Photo(context: context)
         photo.title = title
         photo.image_url = URL(string: image_url)
-        photo.pin = try? Pin.findOrCreatePin(lat: pin.lat, lng: pin.lng, in: context)
+//        photo.pin = try? Pin.findOrCreatePin(lat: pin.lat, lng: pin.lng, in: context)
         return photo
     }
 }
